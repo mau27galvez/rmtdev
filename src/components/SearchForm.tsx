@@ -1,11 +1,20 @@
+import {useState} from "react";
+
 export default function SearchForm() {
-  return (
-    <form action="#" className="search">
+    const [searchText, setSearchText] = useState("");
+
+    return (
+    <form
+        className="search"
+        onSubmit={e=> e.preventDefault()}
+    >
       <button type="submit">
         <i className="fa-solid fa-magnifying-glass"></i>
       </button>
 
       <input
+        value={searchText}
+        onChange={e => setSearchText(e.target.value)}
         spellCheck="false"
         type="text"
         required
