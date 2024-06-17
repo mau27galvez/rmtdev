@@ -1,25 +1,27 @@
-import {useState} from "react";
-
-export default function SearchForm() {
-    const [searchText, setSearchText] = useState("");
-
+export default function SearchForm({
+    searchText,
+    onSearchTextChange,
+}: {
+    searchText: string;
+    onSearchTextChange: (text: string) => void;
+}) {
     return (
-    <form
-        className="search"
-        onSubmit={e=> e.preventDefault()}
-    >
-      <button type="submit">
-        <i className="fa-solid fa-magnifying-glass"></i>
-      </button>
+        <form
+            className="search"
+            onSubmit={e => e.preventDefault()}
+        >
+            <button type="submit">
+                <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
 
-      <input
-        value={searchText}
-        onChange={e => setSearchText(e.target.value)}
-        spellCheck="false"
-        type="text"
-        required
-        placeholder="Find remote developer jobs..."
-      />
-    </form>
-  );
+            <input
+                value={searchText}
+                onChange={e => onSearchTextChange(e.target.value)}
+                spellCheck="false"
+                type="text"
+                required
+                placeholder="Find remote developer jobs..."
+            />
+        </form>
+    );
 }
