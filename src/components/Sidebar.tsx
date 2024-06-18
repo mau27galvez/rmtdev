@@ -2,12 +2,14 @@ import ResultsCount from "./ResultsCount.tsx";
 import SortingControls from "./SortingControls.tsx";
 import JobList from "./JobList.tsx";
 import PaginationControls from "./PaginationControls.tsx";
-import {Job} from "../types.ts";
+import {JobItem} from "../types.ts";
 
 export default function Sidebar({
     jobItems,
+    isLoading,
 }: {
-    jobItems: Job[];
+    jobItems: JobItem[];
+    isLoading: boolean;
 }) {
     return (
         <div className="sidebar">
@@ -16,7 +18,7 @@ export default function Sidebar({
                 <SortingControls/>
             </div>
 
-            <JobList jobItems={jobItems}/>
+            <JobList jobItems={jobItems} isLoading={isLoading}/>
             <PaginationControls/>
         </div>
     );

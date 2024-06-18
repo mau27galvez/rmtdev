@@ -1,4 +1,4 @@
-export type Job = {
+export type JobItem = {
     id: number;
     title: string;
     badgeLetters: string;

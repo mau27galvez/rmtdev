@@ -1,10 +1,10 @@
 import BookmarkIcon from "./BookmarkIcon";
-import {Job} from "../types.ts";
+import {JobItem} from "../types.ts";
 
 export default function JobListItem({
     jobItem,
 }: {
-    jobItem: Job;
+    jobItem: JobItem;
 }) {
     return (
         <li className="job-item">

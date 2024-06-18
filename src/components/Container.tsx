@@ -1,14 +1,16 @@
 import Sidebar from "./Sidebar.tsx";
 import JobItemContent from "./JobItemContent.tsx";
-import {Job} from "../types.ts";
+import {JobItem} from "../types.ts";
 
 export default function Container({
     jobItems,
+    isLoading,
 }: {
-    jobItems: Job[];
+    jobItems: JobItem[];
+    isLoading: boolean;
 }) {
     return <div className="container">
-        <Sidebar jobItems={jobItems}/>
+        <Sidebar jobItems={jobItems} isLoading={isLoading}/>
         <JobItemContent/>
     </div>;
 }
