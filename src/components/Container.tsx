@@ -1,6 +1,6 @@
 import Sidebar from "./Sidebar.tsx";
 import JobItemContent from "./JobItemContent.tsx";
-import {JobItem} from "../types.ts";
+import {JobItem} from "../lib/types.ts";
 
 export default function Container({
     jobItems,

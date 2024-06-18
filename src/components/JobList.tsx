@@ -1,4 +1,4 @@
-import {JobItem} from "../types.ts";
+import {JobItem} from "../lib/types.ts";
 import JobListItem from "./JobListItem.tsx";
 import Spinner from "./Spinner.tsx";
 
@@ -9,8 +9,6 @@ export function JobList({
     jobItems: JobItem[];
     isLoading: boolean;
 }) {
-    console.log(jobItems);
-
     return <ul className="job-list">
         {
             isLoading

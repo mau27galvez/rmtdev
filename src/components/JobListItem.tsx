@@ -1,5 +1,5 @@
 import BookmarkIcon from "./BookmarkIcon";
-import {JobItem} from "../types.ts";
+import {JobItem} from "../lib/types.ts";
 
 export default function JobListItem({
     jobItem,

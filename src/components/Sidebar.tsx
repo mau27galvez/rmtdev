@@ -2,7 +2,7 @@ import ResultsCount from "./ResultsCount.tsx";
 import SortingControls from "./SortingControls.tsx";
 import JobList from "./JobList.tsx";
 import PaginationControls from "./PaginationControls.tsx";
-import {JobItem} from "../types.ts";
+import {JobItem} from "../lib/types.ts";
 
 export default function Sidebar({
     jobItems,
