@@ -33,3 +33,26 @@ export function useJobItems(searchText: string) {
 
     return [jobItemsSlice, isLoading] as const;
 }
+
+export function useActiveJobItemId() {
+    const [activeId, setActiveId] = useState<number | null>(null)
+
+    useEffect(() => {
+        const handleHashChange = () => {
+            const jobItemId = +window.location.hash.slice(1);
+
+            if (jobItemId) {
+                setActiveId(jobItemId);
+                return;
+            }
+
+            setActiveId(null);
+        }
+
+        window.addEventListener("hashchange", handleHashChange);
+
+        return () => window.removeEventListener("hashchange", handleHashChange)
+    }, []);
+
+    return activeId;
+}

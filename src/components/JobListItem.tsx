@@ -1,14 +1,17 @@
 import BookmarkIcon from "./BookmarkIcon";
 import {JobItem} from "../lib/types.ts";
+import {useActiveJobItemId} from "../lib/hooks.ts";
 
 export default function JobListItem({
     jobItem,
 }: {
     jobItem: JobItem;
 }) {
+    const isActive = useActiveJobItemId() === jobItem.id;
+
     return (
-        <li className="job-item">
-            <a className="job-item__link">
+        <li className={`job-item ${isActive ? "job-item--active" : ""}`}>
+            <a href={`#${jobItem.id}`} onClick={() => {}} className="job-item__link">
                 <div className="job-item__badge">{jobItem.badgeLetters}</div>
 
                 <div className="job-item__middle">
