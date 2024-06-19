@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
-import {JobItem} from "./types.ts";
+import {JobItem, JobItemContent} from "./types.ts";
 
 export function useJobItems(searchText: string) {
     const [jobItems, setJobItems] = useState<JobItem[]>([]);
@@ -55,4 +55,38 @@ export function useActiveJobItemId() {
     }, []);
 
     return activeId;
+}
+
+export function useJobItemContentById(id: number | null) {
+    const [jobItemContent, setJobItemContent] = useState<JobItemContent | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+
+    useEffect(() => {
+        if (id === null) {
+            return;
+        }
+
+        const fetchData = async () => {
+            setIsLoading(true);
+
+            try {
+                const response = await fetch(`${BASE_URL}/${id}`);
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+
+                const data = await response.json();
+                setJobItemContent(data["jobItem"]);
+            } catch (error) {
+                throw new Error("Failed to fetch data");
+            }
+
+            setIsLoading(false);
+        }
+
+        fetchData();
+    }, [id]);
+
+    return [jobItemContent, isLoading] as const;
 }
