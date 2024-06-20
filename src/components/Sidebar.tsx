@@ -11,10 +11,12 @@ export default function Sidebar({
     jobItems: JobItem[];
     isLoading: boolean;
 }) {
+    const jobItemsCount = jobItems.length;
+
     return (
         <div className="sidebar">
             <div className="sidebar__top">
-                <ResultsCount/>
+                <ResultsCount count={jobItemsCount}/>
                 <SortingControls/>
             </div>
 

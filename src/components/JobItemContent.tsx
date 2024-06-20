@@ -4,7 +4,7 @@ import Spinner from "./Spinner.tsx";
 
 export default function JobItemContent() {
     const activeJobItemId = useActiveJobItemId();
-    const [jobItemContent, isLoading] = useJobItemContentById(activeJobItemId);
+    const {jobItemContent, isLoading} = useJobItemContentById(activeJobItemId);
 
     if (jobItemContent === null) {
         return <EmptyJobContent/>;
@@ -13,8 +13,6 @@ export default function JobItemContent() {
     if (isLoading) {
         return <LoadingJobContent/>;
     }
-
-    console.log(jobItemContent);
 
     return (
         <section className="job-details">

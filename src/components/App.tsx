@@ -3,11 +3,12 @@ import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 import Container from "./Container.tsx";
 import {useState} from "react";
-import {useJobItems} from "../lib/hooks.ts";
+import {useDebounce, useJobItems} from "../lib/hooks.ts";
 
 function App() {
     const [searchText, setSearchText] = useState("");
-    const [jobItemsSlice, isLoading] = useJobItems(searchText);
+    const debouncedSearchText = useDebounce(searchText, 500);
+    const {jobItemsSlice, isLoading} = useJobItems(debouncedSearchText);
 
     return <>
         <Background/>
