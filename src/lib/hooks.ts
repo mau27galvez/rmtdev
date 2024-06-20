@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
+import {useQuery} from "@tanstack/react-query";
 
 export function useJobItems(searchText: string) {
     const [jobItems, setJobItems] = useState<JobItem[]>([]);
@@ -49,6 +50,7 @@ export function useActiveJobItemId() {
             setActiveId(null);
         }
 
+        handleHashChange();
         window.addEventListener("hashchange", handleHashChange);
 
         return () => window.removeEventListener("hashchange", handleHashChange)
@@ -58,37 +60,29 @@ export function useActiveJobItemId() {
 }
 
 export function useJobItemContentById(id: number | null) {
-    const [jobItemContent, setJobItemContent] = useState<JobItemContent | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-
-
-    useEffect(() => {
-        if (id === null) {
-            return;
-        }
-
-        const fetchData = async () => {
-            setIsLoading(true);
-
-            try {
-                const response = await fetch(`${BASE_URL}/${id}`);
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-
-                const data = await response.json();
-                setJobItemContent(data["jobItem"]);
-            } catch (error) {
-                throw new Error("Failed to fetch data");
+    const {data, error, isPending} = useQuery<JobItemContent>({
+        queryKey: ["jobItemContent", id],
+        queryFn: async () => {
+            if (id === null) {
+                return null;
             }
 
-            setIsLoading(false);
-        }
+            const res = await fetch(`${BASE_URL}/${id}`)
+            const data = await res.json();
 
-        fetchData();
-    }, [id]);
+            return data["jobItem"];
+        },
+        enabled: id !== null,
+        staleTime: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        retry: false,
+    });
 
-    return {jobItemContent, isLoading};
+    if (error) {
+        throw new Error("Failed to fetch data");
+    }
+
+    return {jobItemContent: data || null, isLoading: isPending};
 }
 
 export function useDebounce<T>(value: T, delay: number): T {

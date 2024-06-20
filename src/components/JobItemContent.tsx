@@ -6,12 +6,13 @@ export default function JobItemContent() {
     const activeJobItemId = useActiveJobItemId();
     const {jobItemContent, isLoading} = useJobItemContentById(activeJobItemId);
 
-    if (jobItemContent === null) {
-        return <EmptyJobContent/>;
+    if (isLoading) {
+        console.log(isLoading);
+        return <LoadingJobContent/>;
     }
 
-    if (isLoading) {
-        return <LoadingJobContent/>;
+    if (jobItemContent === null) {
+        return <EmptyJobContent/>;
     }
 
     return (
@@ -73,8 +74,8 @@ export default function JobItemContent() {
                         </div>
                         <ul className="qualifications__list">
                             {
-                                jobItemContent.qualifications.map((qualification, index) => (
-                                    <li key={index} className="qualifications__item">
+                                jobItemContent.qualifications.map(qualification => (
+                                    <li key={qualification} className="qualifications__item">
                                         {qualification}
                                     </li>
                                 ))
@@ -91,8 +92,8 @@ export default function JobItemContent() {
                         </div>
                         <ul className="reviews__list">
                             {
-                                jobItemContent.reviews.map((review, index) => (
-                                    <li key={index} className="reviews__item">
+                                jobItemContent.reviews.map(review => (
+                                    <li key={review} className="reviews__item">
                                         {review}
                                     </li>
                                 ))
