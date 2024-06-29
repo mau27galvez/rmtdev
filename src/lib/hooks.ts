@@ -60,18 +60,21 @@ export function useActiveJobItemId() {
 }
 
 export function useJobItemContentById(id: number | null) {
-    const {data, error, isPending} = useQuery<JobItemContent>({
+    const {data, error, isLoading} = useQuery<JobItemContent>({
         queryKey: ["jobItemContent", id],
-        queryFn: async () => {
-            if (id === null) {
-                return null;
+        queryFn: id ? async () => {
+            const res = await fetch(`${BASE_URL}/${id}`)
+
+            if (!res.ok) {
+                const data = await res.json();
+
+                throw new Error(data["message"]);
             }
 
-            const res = await fetch(`${BASE_URL}/${id}`)
             const data = await res.json();
 
-            return data["jobItem"];
-        },
+            return data["jobItem"] as JobItemContent;
+        }: undefined,
         enabled: id !== null,
         staleTime: 1000 * 60 * 60,
         refetchOnWindowFocus: false,
@@ -82,7 +85,7 @@ export function useJobItemContentById(id: number | null) {
         throw new Error("Failed to fetch data");
     }
 
-    return {jobItemContent: data || null, isLoading: isPending};
+    return {jobItemContent: data || null, isLoading};
 }
 
 export function useDebounce<T>(value: T, delay: number): T {

@@ -7,7 +7,6 @@ export default function JobItemContent() {
     const {jobItemContent, isLoading} = useJobItemContentById(activeJobItemId);
 
     if (isLoading) {
-        console.log(isLoading);
         return <LoadingJobContent/>;
     }
 
