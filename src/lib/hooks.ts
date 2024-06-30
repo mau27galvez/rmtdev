@@ -2,37 +2,40 @@ import {useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
 import {useQuery} from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export function useJobItems(searchText: string) {
-    const [jobItems, setJobItems] = useState<JobItem[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const jobItemsSlice = jobItems.slice(0, 7);
+    const { data, error, isLoading } = useQuery<JobItem[]>({
+        queryKey: ["jobItemSearchText", searchText],
+        queryFn: async () => {
+            if (!searchText.trim()) return [] as JobItem[];
+
+            const res = await fetch(`${BASE_URL}?search=${searchText}`);
+            if (!res.ok) {
+                const data = await res.json();
+
+                throw new Error(data.description);
+            }
+            console.log("Successful request");
+
+            const data = await res.json();
+
+            return data["jobItems"] as JobItem[];
+        },
+        enabled: searchText !== null,
+        staleTime: 1000 * 60 * 60,
+        refetchOnWindowFocus: false,
+        retry: false,
+    });
 
     useEffect(() => {
-        if (!searchText.trim()) return;
-
-        const fetchData = async () => {
-            setIsLoading(true);
-
-            try {
-                const response = await fetch(`${BASE_URL}?search=${searchText}`);
-                if (!response.ok) {
-                    throw new Error(response.statusText);
-                }
-
-                const data = await response.json();
-                setJobItems(data["jobItems"]);
-            } catch (error) {
-                throw new Error("Failed to fetch data");
-            }
-
-            setIsLoading(false);
+        if (error) {
+            toast.error(error.message);
         }
+    }, [error]);
 
-        fetchData();
-    }, [searchText]);
 
-    return {jobItemsSlice, isLoading} as const;
+    return {jobItems: data || [], isLoading} as const;
 }
 
 export function useActiveJobItemId() {
@@ -82,10 +85,10 @@ export function useJobItemContentById(id: number | null) {
     });
 
     if (error) {
-        throw new Error("Failed to fetch data");
+        toast.error(error.message);
     }
 
-    return {jobItemContent: data || null, isLoading};
+    return {jobItemContent: data || null, isLoading} as const;
 }
 
 export function useDebounce<T>(value: T, delay: number): T {
