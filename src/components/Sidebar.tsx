@@ -7,21 +7,35 @@ import {JobItem} from "../lib/types.ts";
 export default function Sidebar({
     jobItems,
     isLoading,
+    totalJobItemsCount,
+    handleNextPage,
+    handlePreviousPage,
+    currentPage,
+    totalPagesCount,
 }: {
     jobItems: JobItem[];
     isLoading: boolean;
+    totalJobItemsCount: number;
+    handleNextPage: () => void;
+    handlePreviousPage: () => void;
+    currentPage: number;
+    totalPagesCount: number;
 }) {
-    const jobItemsCount = jobItems.length;
 
     return (
         <div className="sidebar">
             <div className="sidebar__top">
-                <ResultsCount count={jobItemsCount}/>
+                <ResultsCount count={totalJobItemsCount}/>
                 <SortingControls/>
             </div>
 
             <JobList jobItems={jobItems} isLoading={isLoading}/>
-            <PaginationControls/>
+            <PaginationControls
+                currentPage={currentPage}
+                totalPagesCount={totalPagesCount}
+                onNextPage={handleNextPage}
+                onPreviousPage={handlePreviousPage}
+            />
         </div>
     );
 }
