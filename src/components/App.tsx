@@ -4,14 +4,22 @@ import Footer from "./Footer.tsx";
 import Container from "./Container.tsx";
 import {useState} from "react";
 import {useDebounce, useJobItems} from "../lib/hooks.ts";
-import { Toaster } from "react-hot-toast";
-
+import {Toaster} from "react-hot-toast";
+import {PAGE_SIZE} from "../lib/constants.ts";
+import {JobItemsSortingCriteria} from "../lib/types.ts";
 function App() {
-    const PAGE_SIZE = 7;
     const [searchText, setSearchText] = useState("");
     const debouncedSearchText = useDebounce(searchText, 500);
     const {jobItems, isLoading} = useJobItems(debouncedSearchText);
     const [currentPage, setCurrentPage] = useState(1);
+    const [jobItemsActiveSortingCriteria, setJobItemsActiveSortingCriteria] = useState<JobItemsSortingCriteria>("relevant");
+    jobItems.sort((a, b) => {
+        if (jobItemsActiveSortingCriteria === "relevant") {
+            return b.relevanceScore - a.relevanceScore;
+        }
+
+        return b.daysAgo - a.daysAgo;
+    });
     const jobItemsSlice = jobItems.slice(currentPage * PAGE_SIZE - PAGE_SIZE, currentPage * PAGE_SIZE);
     const totalPagesCount = Math.ceil(jobItems.length / PAGE_SIZE);
 
@@ -39,9 +47,11 @@ function App() {
             handlePreviousPage={handlePreviousPage}
             currentPage={currentPage}
             totalPagesCount={totalPagesCount}
+            setJobItemsActiveSortingCriteria={setJobItemsActiveSortingCriteria}
+            jobItemsActiveSortingCriteria={jobItemsActiveSortingCriteria}
         />
         <Footer/>
-        <Toaster position="top-right" />
+        <Toaster position="top-right"/>
     </>;
 }
 
