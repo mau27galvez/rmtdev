@@ -1,24 +1,37 @@
 import {useContext, useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { BookmarksContext } from "../contexts/BookmarksContextProvider.tsx";
+import {BookmarksContext} from "../contexts/BookmarksContextProvider.tsx";
 
-export function useJobItems(searchText: string) {
-    const { data, error, isLoading } = useQuery<JobItem[]>({
+async function fetchJobItemContentById(id: number) {
+    const res = await fetch(`${BASE_URL}/${id}`)
+
+    if (!res.ok) {
+        const data = await res.json();
+
+        throw new Error(data["message"]);
+    }
+
+    const data = await res.json();
+    const jobItemContent = data["jobItem"] as JobItemContent;
+
+    return jobItemContent;
+}
+
+export function useSearchJobItems(searchText: string) {
+    const {data, error, isLoading} = useQuery<JobItem[]>({
         queryKey: ["jobItemSearchText", searchText],
         queryFn: async () => {
             if (!searchText.trim()) return [] as JobItem[];
 
             const res = await fetch(`${BASE_URL}?search=${searchText}`);
-            if (!res.ok) {
-                const data = await res.json();
-
-                throw new Error(data.description);
-            }
             const data = await res.json();
 
+            if (!res.ok) {
+                throw new Error(data.description);
+            }
 
             return data["jobItems"] as JobItem[];
         },
@@ -34,8 +47,40 @@ export function useJobItems(searchText: string) {
         }
     }, [error]);
 
-
     return {jobItems: data || [], isLoading} as const;
+}
+
+export function useJobItems(ids: number[]) {
+    const jobItemsQueries = useQueries({
+        queries: ids.map(id => ({
+            queryKey: ["jobItemById", id],
+            queryFn: () => fetchJobItemContentById(id),
+            enabled: ids.length > 0,
+            staleTime: 1000 * 60 * 60,
+            refetchOnWindowFocus: false,
+            retry: false,
+        })),
+    });
+
+    const jobItems = jobItemsQueries
+        .map((query) => query.data)
+        .filter((jobItem) => jobItem !== undefined);
+
+    // jobItems.forEach((jobItem) => {
+    //     if (jobItem === undefined) {
+    //         throw new Error("Job item not found");
+    //     }
+    // });
+
+    // useEffect(() => {
+    //     if (error) {
+    //         toast.error(error.message);
+    //     }
+    // }, [error]);
+
+    console.log(jobItems);
+
+    return {jobItems, isLoading: false} as const;
 }
 
 export function useActiveJobItemId() {
@@ -65,19 +110,7 @@ export function useActiveJobItemId() {
 export function useJobItemContentById(id: number | null) {
     const {data, error, isLoading} = useQuery<JobItemContent>({
         queryKey: ["jobItemContent", id],
-        queryFn: id ? async () => {
-            const res = await fetch(`${BASE_URL}/${id}`)
-
-            if (!res.ok) {
-                const data = await res.json();
-
-                throw new Error(data["message"]);
-            }
-
-            const data = await res.json();
-
-            return data["jobItem"] as JobItemContent;
-        }: undefined,
+        queryFn: id ? () => fetchJobItemContentById(id) : undefined,
         enabled: id !== null,
         staleTime: 1000 * 60 * 60,
         refetchOnWindowFocus: false,
@@ -130,7 +163,17 @@ export function useBookmarksContext() {
         throw new Error("useBookmarksContext must be used within a BookmarksContextProvider.");
     }
 
-    const { bookmarkedJobItemIds, handleToggleBookmark } = context;
+    const {
+        bookmarkedJobItemIds,
+        bookmarkedJobItems,
+        isLoading,
+        handleToggleBookmark,
+    } = context;
 
-    return { bookmarkedJobItemIds, handleToggleBookmark } as const;
+    return {
+        bookmarkedJobItemIds,
+        bookmarkedJobItems,
+        isLoading,
+        handleToggleBookmark
+    } as const;
 }

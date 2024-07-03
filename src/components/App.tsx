@@ -3,7 +3,7 @@ import Header from "./Header.tsx";
 import Footer from "./Footer.tsx";
 import Container from "./Container.tsx";
 import {useState} from "react";
-import {useDebounce, useJobItems} from "../lib/hooks.ts";
+import {useDebounce, useSearchJobItems} from "../lib/hooks.ts";
 import {Toaster} from "react-hot-toast";
 import {PAGE_SIZE} from "../lib/constants.ts";
 import {JobItemsSortingCriteria} from "../lib/types.ts";
@@ -11,7 +11,7 @@ import {JobItemsSortingCriteria} from "../lib/types.ts";
 function App() {
     const [searchText, setSearchText] = useState("");
     const debouncedSearchText = useDebounce(searchText, 500);
-    const {jobItems, isLoading} = useJobItems(debouncedSearchText);
+    const {jobItems, isLoading} = useSearchJobItems(debouncedSearchText);
     const [currentPage, setCurrentPage] = useState(1);
     const [jobItemsActiveSortingCriteria, setJobItemsActiveSortingCriteria] = useState<JobItemsSortingCriteria>("relevant");
     jobItems.sort((a, b) => {
