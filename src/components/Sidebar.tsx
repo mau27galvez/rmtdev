@@ -13,19 +13,18 @@ export default function Sidebar({
     currentPage,
     totalPagesCount,
     setJobItemsSorting,
-    jobItemsActiveSortingCriteria
+    jobItemsActiveSortingCriteria,
 }: {
-    jobItems: JobItem[],
-    isLoading: boolean,
-    totalJobItemsCount: number,
-    handleNextPage: () => void,
-    handlePreviousPage: () => void,
-    currentPage: number,
-    totalPagesCount: number,
-    setJobItemsSorting: (filter: JobItemsSortingCriteria) => void,
-    jobItemsActiveSortingCriteria: JobItemsSortingCriteria
+    jobItems: JobItem[];
+    isLoading: boolean;
+    totalJobItemsCount: number;
+    handleNextPage: () => void;
+    handlePreviousPage: () => void;
+    currentPage: number;
+    totalPagesCount: number;
+    setJobItemsSorting: (filter: JobItemsSortingCriteria) => void;
+    jobItemsActiveSortingCriteria: JobItemsSortingCriteria;
 }) {
-
     return (
         <div className="sidebar">
             <div className="sidebar__top">
@@ -36,7 +35,10 @@ export default function Sidebar({
                 />
             </div>
 
-            <JobList jobItems={jobItems} isLoading={isLoading}/>
+            <JobList
+                jobItems={jobItems}
+                isLoading={isLoading}
+            />
             <PaginationControls
                 currentPage={currentPage}
                 totalPagesCount={totalPagesCount}

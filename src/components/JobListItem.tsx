@@ -1,5 +1,6 @@
 import BookmarkIcon from "./BookmarkIcon";
 import {JobItem} from "../lib/types.ts";
+import { useBookmarksContext } from "../lib/hooks.ts";
 
 export default function JobListItem({
     jobItem,
@@ -8,6 +9,8 @@ export default function JobListItem({
     jobItem: JobItem;
     isActive: boolean;
 }) {
+    const { bookmarkedJobItemIds, handleToggleBookmark } = useBookmarksContext();
+
     return (
         <li className={`job-item ${isActive ? "job-item--active" : ""}`}>
             <a href={`#${jobItem.id}`} onClick={() => {}} className="job-item__link">
@@ -19,7 +22,10 @@ export default function JobListItem({
                 </div>
 
                 <div className="job-item__right">
-                    <BookmarkIcon/>
+                    <BookmarkIcon
+                        onToggleBookmark={() => handleToggleBookmark(jobItem.id)}
+                        isBookmarked={bookmarkedJobItemIds.includes(jobItem.id)}
+                    />
                     <time className="job-item__time">{jobItem.daysAgo}d</time>
                 </div>
             </a>

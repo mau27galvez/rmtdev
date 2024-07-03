@@ -1,16 +1,18 @@
 import {useActiveJobItemId, useJobItemContentById} from "../lib/hooks.ts";
+import { useBookmarksContext } from "../lib/hooks.ts";
 import BookmarkIcon from "./BookmarkIcon.tsx";
 import Spinner from "./Spinner.tsx";
 
 export default function JobItemContent() {
     const activeJobItemId = useActiveJobItemId();
     const {jobItemContent, isLoading} = useJobItemContentById(activeJobItemId);
+    const { bookmarkedJobItemIds, handleToggleBookmark } = useBookmarksContext();
 
     if (isLoading) {
         return <LoadingJobContent/>;
     }
 
-    if (jobItemContent === null) {
+    if (jobItemContent === null || activeJobItemId === null) {
         return <EmptyJobContent/>;
     }
 
@@ -36,7 +38,10 @@ export default function JobItemContent() {
                         <div className="job-info__below-badge">
                             <time className="job-info__time">{jobItemContent.daysAgo}d</time>
 
-                            <BookmarkIcon/>
+                            <BookmarkIcon
+                                isBookmarked={bookmarkedJobItemIds.includes(activeJobItemId)}
+                                onToggleBookmark={() => handleToggleBookmark(activeJobItemId)}
+                            />
                         </div>
                     </div>
 

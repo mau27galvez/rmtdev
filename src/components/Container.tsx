@@ -11,17 +11,17 @@ export default function Container({
     currentPage,
     totalPagesCount,
     setJobItemsActiveSortingCriteria,
-    jobItemsActiveSortingCriteria
+    jobItemsActiveSortingCriteria,
 }: {
-    jobItems: JobItem[],
-    isLoading: boolean,
-    totalJobItemsCount: number,
-    handleNextPage: () => void,
-    handlePreviousPage: () => void,
-    currentPage: number,
-    totalPagesCount: number,
-    setJobItemsActiveSortingCriteria: (criteria: JobItemsSortingCriteria) => void,
-    jobItemsActiveSortingCriteria: JobItemsSortingCriteria
+    jobItems: JobItem[];
+    isLoading: boolean;
+    totalJobItemsCount: number;
+    handleNextPage: () => void;
+    handlePreviousPage: () => void;
+    currentPage: number;
+    totalPagesCount: number;
+    setJobItemsActiveSortingCriteria: (criteria: JobItemsSortingCriteria) => void;
+    jobItemsActiveSortingCriteria: JobItemsSortingCriteria;
 }) {
     return <div className="container">
         <Sidebar

@@ -1,8 +1,9 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
 import {useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { BookmarksContext } from "../contexts/BookmarksContextProvider.tsx";
 
 export function useJobItems(searchText: string) {
     const { data, error, isLoading } = useQuery<JobItem[]>({
@@ -16,9 +17,8 @@ export function useJobItems(searchText: string) {
 
                 throw new Error(data.description);
             }
-            console.log("Successful request");
-
             const data = await res.json();
+
 
             return data["jobItems"] as JobItem[];
         },
@@ -103,4 +103,34 @@ export function useDebounce<T>(value: T, delay: number): T {
     }, [delay, value]);
 
     return debouncedValue;
+}
+
+export function useLocalStorage<T>(key: string, initialValue: T) {
+    const [value, setValue] = useState<T>(() => {
+        const savedValue = localStorage.getItem(key);
+
+        if (savedValue) {
+            return JSON.parse(savedValue);
+        }
+
+        return initialValue;
+    });
+
+    useEffect(() => {
+        localStorage.setItem(key, JSON.stringify(value));
+    }, [key, value]);
+
+    return [value, setValue] as const;
+}
+
+export function useBookmarksContext() {
+    const context = useContext(BookmarksContext);
+
+    if (!context) {
+        throw new Error("useBookmarksContext must be used within a BookmarksContextProvider.");
+    }
+
+    const { bookmarkedJobItemIds, handleToggleBookmark } = context;
+
+    return { bookmarkedJobItemIds, handleToggleBookmark } as const;
 }

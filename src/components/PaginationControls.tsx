@@ -11,8 +11,6 @@ export default function PaginationControls({
   onNextPage: () => void;
   onPreviousPage: () => void;
 }) {
-  console.log(currentPage);
-  console.log(totalPagesCount);
   return <section className="pagination">
     {
       currentPage === 1

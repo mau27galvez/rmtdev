@@ -7,6 +7,7 @@ import {useDebounce, useJobItems} from "../lib/hooks.ts";
 import {Toaster} from "react-hot-toast";
 import {PAGE_SIZE} from "../lib/constants.ts";
 import {JobItemsSortingCriteria} from "../lib/types.ts";
+
 function App() {
     const [searchText, setSearchText] = useState("");
     const debouncedSearchText = useDebounce(searchText, 500);
