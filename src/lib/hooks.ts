@@ -65,22 +65,9 @@ export function useJobItems(ids: number[]) {
     const jobItems = jobItemsQueries
         .map((query) => query.data)
         .filter((jobItem) => jobItem !== undefined);
+    const isLoading = jobItemsQueries.some(jobItemQuery => jobItemQuery.isLoading);
 
-    // jobItems.forEach((jobItem) => {
-    //     if (jobItem === undefined) {
-    //         throw new Error("Job item not found");
-    //     }
-    // });
-
-    // useEffect(() => {
-    //     if (error) {
-    //         toast.error(error.message);
-    //     }
-    // }, [error]);
-
-    console.log(jobItems);
-
-    return {jobItems, isLoading: false} as const;
+    return {jobItems, isLoading: isLoading} as const;
 }
 
 export function useActiveJobItemId() {
