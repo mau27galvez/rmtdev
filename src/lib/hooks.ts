@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import {MutableRefObject, Ref, useContext, useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
 import {useQueries, useQuery} from "@tanstack/react-query";
@@ -163,4 +163,21 @@ export function useBookmarksContext() {
         isLoading,
         handleToggleBookmark
     } as const;
+}
+
+export function useOnClickOutside(refs: MutableRefObject<HTMLElement | null>[], handler: () => void) {
+    useEffect(() => {
+        const handle = (e: MouseEvent) => {
+            if (
+                e.target instanceof HTMLElement
+                && !refs.some(ref => ref.current?.contains(e.target as HTMLElement))
+            ) {
+                handler();
+            }
+        }
+
+        document.addEventListener("click", handle);
+
+        return () => document.removeEventListener("click", handle);
+    }, [handler, refs]);
 }

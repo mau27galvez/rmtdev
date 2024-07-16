@@ -1,8 +1,8 @@
-import { forwardRef, Ref } from "react";
+import { ForwardedRef, forwardRef } from "react";
 import { useBookmarksContext } from "../lib/hooks";
 import JobList from "./JobList";
 
-const BookmarksPopover = forwardRef((_props, ref: Ref<HTMLDivElement>) => {
+const BookmarksPopover = forwardRef((_props, ref: ForwardedRef<HTMLDivElement>) => {
   const {bookmarkedJobItems, isLoading} = useBookmarksContext();
 
   return <div ref={ref} className="bookmarks-popover">
