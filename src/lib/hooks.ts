@@ -1,4 +1,4 @@
-import {MutableRefObject, Ref, useContext, useEffect, useState} from "react";
+import {MutableRefObject, useContext, useEffect, useState} from "react";
 import {BASE_URL} from "./constants.ts";
 import {JobItem, JobItemContent} from "./types.ts";
 import {useQueries, useQuery} from "@tanstack/react-query";
