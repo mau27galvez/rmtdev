@@ -1,25 +1,21 @@
-import {JobItemsSortingCriteria} from "../lib/types";
+import { useJobItemsContext } from "../lib/hooks";
 
-export default function SortingControls({
-    setJobItemsSorting,
-    jobItemsActiveSortingCriteria
-}: {
-    setJobItemsSorting: (criteria: JobItemsSortingCriteria) => void,
-    jobItemsActiveSortingCriteria: JobItemsSortingCriteria
-}) {
+export default function SortingControls() {
+    const { setJobItemsActiveSortingCriteria, jobItemsActiveSortingCriteria } = useJobItemsContext();
+
     return (
         <section className="sorting">
             <i className="fa-solid fa-arrow-down-short-wide"></i>
 
             <button
-                onClick={() => setJobItemsSorting('relevant')}
+                onClick={() => setJobItemsActiveSortingCriteria('relevant')}
                 className={`${jobItemsActiveSortingCriteria === 'relevant' ? 'sorting__button--active' : ''}  sorting__button sorting__button--relevant`}
             >
                 Relevant
             </button>
 
             <button
-                onClick={() => setJobItemsSorting('recent')}
+                onClick={() => setJobItemsActiveSortingCriteria('recent')}
                 className={`${jobItemsActiveSortingCriteria === 'recent' ? 'sorting__button--active' : ''} sorting__button sorting__button--recent`}
             >
                 Recent

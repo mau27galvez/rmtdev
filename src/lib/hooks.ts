@@ -4,6 +4,9 @@ import {JobItem, JobItemContent} from "./types.ts";
 import {useQueries, useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {BookmarksContext} from "../contexts/BookmarksContextProvider.tsx";
+import {ActiveJobItemIdContext} from "../contexts/ActiveIdContextProvider.tsx";
+import { SearchTextContext } from "../contexts/SearchTextContextProvider.tsx";
+import { JobItemsContext } from "../contexts/JobItemsContextProvider.tsx";
 
 async function fetchJobItemContentById(id: number) {
     const res = await fetch(`${BASE_URL}/${id}`)
@@ -94,6 +97,16 @@ export function useActiveJobItemId() {
     return activeId;
 }
 
+export function useActiveJobItemIdContext() {
+    const context = useContext(ActiveJobItemIdContext);
+
+    if (!context) {
+        throw new Error("useActiveJobItemIdContext must be used within an ActiveJobItemIdContextProvider.");
+    }
+
+    return context.activeJobItemId;
+}
+
 export function useJobItemContentById(id: number | null) {
     const {data, error, isLoading} = useQuery<JobItemContent>({
         queryKey: ["jobItemContent", id],
@@ -180,4 +193,50 @@ export function useOnClickOutside(refs: MutableRefObject<HTMLElement | null>[], 
 
         return () => document.removeEventListener("click", handle);
     }, [handler, refs]);
+}
+
+export function useSearchTextContext() {
+    const context = useContext(SearchTextContext);
+
+    if (!context) {
+        throw new Error("useSearchTextContext must be used within a SearchTextContextProvider.");
+    }
+
+    const {searchText, setSearchText, debouncedSearchText} = context;
+
+    return {searchText, setSearchText, debouncedSearchText} as const;
+}
+
+export function useJobItemsContext() {
+    const context = useContext(JobItemsContext);
+
+    if (!context) {
+        throw new Error("JobItemsContext must be used within a SearchTextContextProvider.");
+    }
+
+    const {
+        jobItems,
+        totalJobItemsCount,
+        isLoading,
+        currentPage,
+        jobItemsSlice,
+        totalPagesCount,
+        jobItemsActiveSortingCriteria,
+        setJobItemsActiveSortingCriteria,
+        handleNextPage,
+        handlePreviousPage,
+    } = context;
+
+    return {
+        jobItems,
+        totalJobItemsCount,
+        isLoading,
+        currentPage,
+        jobItemsSlice,
+        totalPagesCount,
+        jobItemsActiveSortingCriteria,
+        setJobItemsActiveSortingCriteria,
+        handleNextPage,
+        handlePreviousPage,
+    } as const;
 }

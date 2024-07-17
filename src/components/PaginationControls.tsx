@@ -1,22 +1,15 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
+import { useJobItemsContext } from "../lib/hooks";
 
-export default function PaginationControls({
-  currentPage,
-  totalPagesCount,
-  onNextPage,
-  onPreviousPage,
-}: {
-  currentPage: number;
-  totalPagesCount: number;
-  onNextPage: () => void;
-  onPreviousPage: () => void;
-}) {
+export default function PaginationControls() {
+  const { currentPage, totalPagesCount, handleNextPage, handlePreviousPage } = useJobItemsContext();
+
   return <section className="pagination">
     {
       currentPage === 1
       ? <div className="pagination__spacer"></div>
       : <button className="pagination__button" onClick={(e) => {
-          onPreviousPage();
+          handlePreviousPage();
           e.currentTarget.blur();
         }}>
           <ArrowLeftIcon /> Page {currentPage - 1}
@@ -25,7 +18,7 @@ export default function PaginationControls({
 
     {
       currentPage < totalPagesCount && <button className="pagination__button" onClick={(e) => {
-        onNextPage();
+        handleNextPage();
         e.currentTarget.blur();
       }}>
         Page {currentPage + 1} <ArrowRightIcon />

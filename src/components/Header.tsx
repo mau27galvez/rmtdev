@@ -2,13 +2,7 @@ import Logo from "./Logo.tsx";
 import BookmarksButton from "./BookmarksButton.tsx";
 import SearchForm from "./SearchForm.tsx";
 
-export default function Header({
-    searchText,
-    setSearchText,
-}: {
-    searchText: string;
-    setSearchText: (searchText: string) => void;
-}) {
+export default function Header() {
     return (
         <header className="header">
             <div className="header__top">
@@ -16,7 +10,7 @@ export default function Header({
                 <BookmarksButton/>
             </div>
 
-            <SearchForm searchText={searchText} onSearchTextChange={setSearchText}/>
+            <SearchForm/>
         </header>
     );
 }

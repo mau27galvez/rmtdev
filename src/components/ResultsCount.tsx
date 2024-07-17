@@ -1,7 +1,7 @@
-export default function ResultsCount({
-    count,
-}: {
-    count: number;
-}) {
-    return <p className="count"><span className="u-bold">{count}</span> results</p>;
+import { useJobItemsContext } from "../lib/hooks";
+
+export default function ResultsCount() {
+    const {totalJobItemsCount} = useJobItemsContext();
+
+    return <p className="count"><span className="u-bold">{totalJobItemsCount}</span> results</p>;
 }

@@ -1,10 +1,10 @@
-import {useActiveJobItemId, useJobItemContentById} from "../lib/hooks.ts";
+import { useActiveJobItemIdContext, useJobItemContentById} from "../lib/hooks.ts";
 import { useBookmarksContext } from "../lib/hooks.ts";
 import BookmarkIcon from "./BookmarkIcon.tsx";
 import Spinner from "./Spinner.tsx";
 
 export default function JobItemContent() {
-    const activeJobItemId = useActiveJobItemId();
+    const activeJobItemId = useActiveJobItemIdContext();
     const {jobItemContent, isLoading} = useJobItemContentById(activeJobItemId);
     const { bookmarkedJobItemIds, handleToggleBookmark } = useBookmarksContext();
 
